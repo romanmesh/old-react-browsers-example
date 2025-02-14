@@ -1,5 +1,6 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.ts",
@@ -15,6 +16,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: "src/index.html", // to import index.html file inside index.js
     }),
+    new CleanWebpackPlugin(),
   ],
   devServer: {
     port: 3035, // you can change the port
@@ -33,7 +35,21 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader", "postcss-loader"],
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              modules: {
+                auto: true,
+                namedExport: false,
+                localIdentName: "[name]__[local]__[hash:base64:5]",
+              },
+            },
+          },
+          "postcss-loader",
+          ,
+        ],
       },
     ],
   },
